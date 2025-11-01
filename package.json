@@ -1,26 +1,27 @@
 {
-  "name": "mini-network-chat-vercel",
+  "name": "online-registration-portal",
   "version": "2.0.0",
-  "description": "Mini Network Chat - Vercel Serverless Edition",
+  "description": "Online Registration Portal - Vercel Serverless + Upstash Redis",
   "scripts": {
     "dev": "vercel dev",
     "build": "echo 'No build step needed for static frontend'",
     "deploy": "vercel --prod"
   },
   "dependencies": {
-    "@upstash/redis": "^1.22.0"
+    "node-fetch": "^2.6.7",
+    "@upstash/redis": "^1.22.0"   // You can remove this if NOT using SDK, OK to leave for future
   },
   "devDependencies": {
     "vercel": "^32.0.0"
   },
   "keywords": [
-    "chat",
+    "registration",
     "vercel",
     "serverless",
-    "networking",
-    "http-polling"
+    "upstash",
+    "redis"
   ],
-  "author": "Mini Network Chat",
+  "author": "Online Registration Portal",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
