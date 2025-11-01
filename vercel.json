@@ -1,2 +1,7 @@
 {
+  "version": 2,
+  "outputDirectory": "src",
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
 }
