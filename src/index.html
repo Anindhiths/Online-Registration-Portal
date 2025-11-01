@@ -2,136 +2,558 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Online Registration Portal</title>
-  <link rel="stylesheet" href="/public/style.css">
-  <!-- Add Google Fonts for style -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;400&display=swap" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="/src/script.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Montserrat', Arial, sans-serif;
-      background: linear-gradient(135deg, #6285e3 5%, #dfe8fc 95%);
-      min-height: 100vh;
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .main-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      padding: 44px 0;
-      gap: 50px;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
     }
-    .portal-card {
-      background: #fff;
-      box-shadow: 0 4px 18px rgba(60,60,80,0.13);
-      border-radius: 16px;
-      padding: 38px 34px 32px 34px;
-      min-width: 360px;
-      max-width: 420px;
-      margin-top: 28px;
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: float 20s linear infinite;
+      pointer-events: none;
+    }
+    
+    @keyframes float {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 40px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: slideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      position: sticky;
+      top: 20px;
+    }
+    
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .card-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    
+    .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    
+    .subtitle {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .form-group {
+      margin-bottom: 24px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #334155;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+    }
+    
+    .input-wrapper {
       position: relative;
     }
-    .portal-card h1 {
-      font-size: 2.1rem;
-      color: #3055ad;
-      margin-bottom: 16px;
-      text-align: center;
-      font-weight: 600;
-      letter-spacing: 1px;
-    }
-    .portal-card .icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      color: #457ff5;
-    }
-    label { font-weight: 500; color: #465584; }
-    input[type="text"], input[type="email"], input[type="password"] {
-      margin-bottom: 18px;
-      border-radius: 7px;
-      border: 1.6px solid #bcd9ea;
-      font-size: 16px;
-      padding: 12px;
+    
+    input {
       width: 100%;
-      background: #f8faff;
-      margin-top: 6px;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: #f8fafc;
     }
-    button.registerbtn {
-      background: linear-gradient(94deg,#5272f1 70%,#3bd6f7 100%);
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      font-size: 1.08rem;
-      font-weight: 600;
-      box-shadow: 0 2px 8px #cbe2ff38;
-      cursor: pointer;
-      margin-top: 15px;
-      padding: 13px 0;
-      width: 100%;
-      transition: background 0.13s;
-      letter-spacing: 1px;
-    }
-    button.registerbtn:hover {
-      background: linear-gradient(88deg,#3055ad 60%,#3bd6f7 100%);
-    }
-    #result {
-      margin-top: 22px;
-      text-align: center;
-      font-size: 1.08rem;
-      min-height: 30px;
-    }
-    #viewRegistrations {
-      margin-top: 12px!important;
-      background: linear-gradient(87deg,#45b36e 55%,#58e8a7 100%);
-    }
-    #registrationsTable {
-      margin: 44px auto 0 auto;
+    
+    input:focus {
+      outline: none;
+      border-color: #667eea;
       background: #fff;
-      padding: 22px;
-      border-radius: 14px;
-      max-width: 690px;
-      box-shadow: 0 4px 16px rgba(50,80,100,0.10);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      transform: translateY(-1px);
     }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border-bottom: 1px solid #e5ecfa; padding: 11px 6px; text-align: left;}
-    th {
-      background: #f7f9fe;
-      color: #5272f1;
+    
+    input:valid:not(:placeholder-shown) {
+      border-color: #10b981;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
       font-weight: 600;
-      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
     }
-    @media (max-width:660px) {
-      .main-wrapper { flex-direction: column; align-items: center; gap: 15px;}
-      .portal-card{ min-width: 90vw; max-width: 95vw;}
-      #registrationsTable{ max-width:96vw; }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .btn span {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      margin-top: 8px;
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      margin-top: 12px;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+    }
+    
+    #result {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 500;
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    #result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    #result.success {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      color: #065f46;
+      border: 2px solid #10b981;
+    }
+    
+    #result.error {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      color: #991b1b;
+      border: 2px solid #ef4444;
+    }
+    
+    .table-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+      display: none;
+    }
+    
+    .table-container.show {
+      display: block;
+    }
+    
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .table-header {
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .table-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .badge {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+    
+    thead tr {
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    }
+    
+    th {
+      padding: 16px;
+      text-align: left;
+      font-weight: 700;
+      color: #475569;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    th:first-child {
+      border-radius: 12px 0 0 12px;
+    }
+    
+    th:last-child {
+      border-radius: 0 12px 12px 0;
+    }
+    
+    tbody tr {
+      background: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    
+    tbody tr:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+    }
+    
+    td {
+      padding: 16px;
+      color: #334155;
+      font-size: 14px;
+    }
+    
+    td:first-child {
+      border-radius: 12px 0 0 12px;
+      font-weight: 600;
+    }
+    
+    td:last-child {
+      border-radius: 0 12px 12px 0;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #94a3b8;
+    }
+    
+    .empty-state-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    
+    @media (max-width: 1024px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      
+      .card {
+        position: relative;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      body {
+        padding: 10px;
+      }
+      
+      .card, .table-container {
+        padding: 28px 24px;
+      }
+      
+      h1 {
+        font-size: 26px;
+      }
+      
+      .icon-wrapper {
+        width: 64px;
+        height: 64px;
+        font-size: 32px;
+      }
+      
+      table {
+        font-size: 13px;
+      }
+      
+      th, td {
+        padding: 12px 8px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="main-wrapper">
-    <div class="portal-card">
-      <div class="icon">📋</div>
-      <h1>Online Registration</h1>
-      <form id="registrationForm" autocomplete="off" novalidate style="width:100%;">
-        <label for="name">Full Name</label>
-        <input type="text" name="name" id="name" required minlength="3" maxlength="32">
-
-        <label for="email">Email Address</label>
-        <input type="email" name="email" id="email" required pattern="[^ @]*@[^ @]*">
-
-        <label for="psw">Password</label>
-        <input type="password" name="psw" id="psw" required minlength="6">
-
-        <button type="submit" class="registerbtn">Submit Registration</button>
-        <button type="button" id="viewRegistrations" class="registerbtn" style="margin-top:10px;">View Registrations</button>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon-wrapper">📋</div>
+        <h1>Registration Portal</h1>
+        <p class="subtitle">Create your account in seconds</p>
+      </div>
+      
+      <form id="registrationForm" autocomplete="off">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <div class="input-wrapper">
+            <input type="text" id="name" name="name" required minlength="3" maxlength="32" placeholder="John Doe">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <input type="email" id="email" name="email" required pattern="[^ @]*@[^ @]*" placeholder="john@example.com">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="psw">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="psw" name="psw" required minlength="6" placeholder="••••••••">
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+          <span>Create Account</span>
+        </button>
+        
+        <button type="button" id="viewRegistrations" class="btn btn-secondary">
+          <span>View All Registrations</span>
+        </button>
       </form>
+      
       <div id="result"></div>
     </div>
-    <div id="registrationsTable"></div>
+    
+    <div id="registrationsTable" class="table-container">
+      <div class="table-header">
+        <h2>Registered Users</h2>
+        <span class="badge" id="userCount">0 Users</span>
+      </div>
+      <div id="tableContent"></div>
+    </div>
   </div>
+
+  <script>
+    const registrations = [];
+    
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('psw').value;
+      
+      if (name.length < 3) {
+        showResult('Name must be at least 3 characters long', 'error');
+        return;
+      }
+      
+      if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+        showResult('Please enter a valid email address', 'error');
+        return;
+      }
+      
+      if (password.length < 6) {
+        showResult('Password must be at least 6 characters long', 'error');
+        return;
+      }
+      
+      if (registrations.some(r => r.email === email)) {
+        showResult('This email is already registered', 'error');
+        return;
+      }
+      
+      registrations.push({ name, email });
+      showResult('✓ Registration successful!', 'success');
+      
+      document.getElementById('registrationForm').reset();
+      updateTable();
+    });
+    
+    document.getElementById('viewRegistrations').addEventListener('click', function() {
+      const table = document.getElementById('registrationsTable');
+      table.classList.toggle('show');
+      updateTable();
+    });
+    
+    function showResult(message, type) {
+      const result = document.getElementById('result');
+      result.textContent = message;
+      result.className = `show ${type}`;
+      
+      setTimeout(() => {
+        result.classList.remove('show');
+      }, 4000);
+    }
+    
+    function updateTable() {
+      const tableContent = document.getElementById('tableContent');
+      const userCount = document.getElementById('userCount');
+      
+      userCount.textContent = `${registrations.length} User${registrations.length !== 1 ? 's' : ''}`;
+      
+      if (registrations.length === 0) {
+        tableContent.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <p>No registrations yet</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      registrations.forEach((reg, index) => {
+        html += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${reg.name}</td>
+            <td>${reg.email}</td>
+          </tr>
+        `;
+      });
+      
+      html += `
+          </tbody>
+        </table>
+      `;
+      
+      tableContent.innerHTML = html;
+    }
+  </script>
 </body>
 </html>
