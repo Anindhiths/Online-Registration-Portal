@@ -26,14 +26,22 @@ $(document).ready(function(){
     if (!validateForm()) return;
 
     $.ajax({
-      url: "/api/register.php",
+      url: "/api/register",
       type: "POST",
-      data: $(this).serialize(),
+      data: JSON.stringify({
+        name: $("#name").val(),
+        email: $("#email").val(),
+        psw: $("#psw").val()
+      }),
+      contentType: "application/json",
       success: function(response) {
-        if (response.indexOf("error") !== -1) {
-          $("#result").html("<div class='error'>" + response + "</div>");
+        if (response.error) {
+          $("#result").html("<div class='error'>" + response.error + "</div>");
         } else {
-          $("#result").html("<div class='success'>" + response + "</div>");
+          $("#result").html("<div class='success'><h2>✅ Registered Successfully!</h2>" +
+            "<div><b>Name:</b> <span style='color:#3b3b5b;'>" + response.name + "</span></div>" +
+            "<div><b>Email:</b> <span style='color:#5272f1;'>" + response.email + "</span></div>" +
+            "<div><b>Registered at:</b> " + response.timestamp + "</div></div>");
           $("#registrationForm").trigger("reset");
         }
       },
