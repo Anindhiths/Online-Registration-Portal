@@ -1,5 +1,3 @@
-// File: /api/register.js
-
 const fetch = require('node-fetch');
 
 const UPSTASH_URL = process.env.UPSTASH_URL;      // e.g., https://us1-xxxx.upstash.io
@@ -10,9 +8,27 @@ module.exports = async (req, res) => {
     res.status(405).json({ error: "Method Not Allowed" });
     return;
   }
-  let { name, email, psw } = req.body;
 
-  // Basic server-side validation
+  let body = "";
+
+  // Must manually read and parse incoming POST data
+  await new Promise((resolve, reject) => {
+    req.on("data", chunk => { body += chunk });
+    req.on("end", resolve);
+    req.on("error", reject);
+  });
+
+  let data;
+  try {
+    data = JSON.parse(body);
+  } catch (e) {
+    res.status(400).json({ error: "Invalid JSON body." });
+    return;
+  }
+
+  // Extract and validate
+  let { name, email, psw } = data;
+
   if (!name || name.length < 3 || name.length > 32) {
     res.status(400).json({ error: "Server: Invalid name." }); return;
   }
