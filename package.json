@@ -4,12 +4,12 @@
   "description": "Online Registration Portal - Vercel Serverless + Upstash Redis",
   "scripts": {
     "dev": "vercel dev",
-    "build": "echo 'No build step needed for static frontend'",
+    "build": "echo \"No build step needed for static frontend\"",
     "deploy": "vercel --prod"
   },
   "dependencies": {
     "node-fetch": "^2.6.7",
-    "@upstash/redis": "^1.22.0"   // You can remove this if NOT using SDK, OK to leave for future
+    "@upstash/redis": "^1.22.0"
   },
   "devDependencies": {
     "vercel": "^32.0.0"
