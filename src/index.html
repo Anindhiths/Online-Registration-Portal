@@ -457,9 +457,111 @@
   </div>
 
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
  
-  <script src="script.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+  $(document).ready(function(){
+    console.log("✅ jQuery loaded, script running!");
+    
+    function validateForm() {
+      let valid = true;
+      $(".error-msg").remove();
+      if ($("#name").val().length < 3) {
+        $("#name").after("<div class='error-msg' style='color:red;font-size:12px;'>Name must be at least 3 characters.</div>");
+        valid = false;
+      }
+      let emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+      if (!emailPattern.test($("#email").val())) {
+        $("#email").after("<div class='error-msg' style='color:red;font-size:12px;'>Invalid email address.</div>");
+        valid = false;
+      }
+      if ($("#psw").val().length < 6) {
+        $("#psw").after("<div class='error-msg' style='color:red;font-size:12px;'>Password must be at least 6 characters.</div>");
+        valid = false;
+      }
+      return valid;
+    }
+    
+    $("#registrationForm").on("submit", function(event) {
+      event.preventDefault();
+      console.log("Form submitted!");
+      $("#result").html("");
+      $("#registrationsTable").html("");
+      
+      if (!validateForm()) {
+        console.log("Validation failed");
+        return;
+      }
+      
+      console.log("Sending to API...");
+      $.ajax({
+        url: "/api/register",
+        type: "POST",
+        data: JSON.stringify({
+          name: $("#name").val(),
+          email: $("#email").val(),
+          psw: $("#psw").val()
+        }),
+        contentType: "application/json",
+        success: function(response) {
+          console.log("✅ Success:", response);
+          if (response.error) {
+            $("#result").html("<div class='error'>" + response.error + "</div>");
+          } else {
+            $("#result").html(
+              `<div class='success'>
+                <h2>✅ Registered Successfully!</h2>
+                <div><b>Name:</b> ${response.name}</div>
+                <div><b>Email:</b> ${response.email}</div>
+                <div><b>Registered at:</b> ${response.timestamp}</div>
+              </div>`
+            );
+            $("#registrationForm").trigger("reset");
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error("❌ Error:", xhr.responseText);
+          $("#result").html("<div class='error'>Cannot submit, server error.</div>");
+        }
+      });
+    });
+    
+    $("#viewRegistrations").click(function(){
+      console.log("View registrations clicked!");
+      $("#result").html("");
+      $.ajax({
+        url: "/api/registrations",
+        type: "GET",
+        success: function(data) {
+          console.log("✅ Registrations data:", data);
+          if(Array.isArray(data) && data.length) {
+            let table = `
+            <table>
+              <tr><th>Name</th><th>Email</th><th>Registered At</th></tr>
+              ${data.map(row => `
+                <tr>
+                  <td>${row.name}</td>
+                  <td>${row.email}</td>
+                  <td>${row.created_at ? new Date(row.created_at).toLocaleString() : ""}</td>
+                </tr>
+              `).join('')}
+            </table>`;
+            $("#registrationsTable").html(table).show();
+          } else {
+            $("#registrationsTable").html("<div>No registrations found.</div>").show();
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error("❌ Fetch error:", xhr.responseText);
+          $("#registrationsTable").html("<div class='error'>Could not fetch registrations.</div>").show();
+        }
+      });
+    });
+  });
+  </script>
+</body>
+</html>
 
 
     
