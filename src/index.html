@@ -221,31 +221,58 @@
     
     #result {
       margin-top: 20px;
+    }
+    
+    .success, .error {
       padding: 16px;
       border-radius: 12px;
       text-align: center;
       font-weight: 500;
       font-size: 14px;
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: all 0.3s ease;
+      animation: slideIn 0.3s ease;
     }
     
-    #result.show {
-      opacity: 1;
-      transform: translateY(0);
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     
-    #result.success {
+    .success {
       background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
       color: #065f46;
       border: 2px solid #10b981;
     }
     
-    #result.error {
+    .success h2 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: #065f46;
+      background: none;
+      -webkit-text-fill-color: inherit;
+    }
+    
+    .success div {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+    
+    .error {
       background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
       color: #991b1b;
       border: 2px solid #ef4444;
+    }
+    
+    .error-msg {
+      font-size: 12px;
+      color: #ef4444;
+      margin-top: 4px;
+      animation: slideIn 0.2s ease;
     }
     
     .table-container {
@@ -256,11 +283,6 @@
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.2);
       animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-      display: none;
-    }
-    
-    .table-container.show {
-      display: block;
     }
     
     @keyframes slideInRight {
@@ -274,42 +296,17 @@
       }
     }
     
-    .table-header {
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .table-header h2 {
-      font-size: 24px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .badge {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    
-    table {
+    #registrationsTable table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0 8px;
     }
     
-    thead tr {
+    #registrationsTable thead tr {
       background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
     }
     
-    th {
+    #registrationsTable th {
       padding: 16px;
       text-align: left;
       font-weight: 700;
@@ -319,50 +316,38 @@
       letter-spacing: 1px;
     }
     
-    th:first-child {
+    #registrationsTable th:first-child {
       border-radius: 12px 0 0 12px;
     }
     
-    th:last-child {
+    #registrationsTable th:last-child {
       border-radius: 0 12px 12px 0;
     }
     
-    tbody tr {
+    #registrationsTable tbody tr {
       background: white;
       transition: all 0.3s ease;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
     
-    tbody tr:hover {
+    #registrationsTable tbody tr:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
     }
     
-    td {
+    #registrationsTable td {
       padding: 16px;
       color: #334155;
       font-size: 14px;
     }
     
-    td:first-child {
+    #registrationsTable td:first-child {
       border-radius: 12px 0 0 12px;
       font-weight: 600;
     }
     
-    td:last-child {
+    #registrationsTable td:last-child {
       border-radius: 0 12px 12px 0;
-    }
-    
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: #94a3b8;
-    }
-    
-    .empty-state-icon {
-      font-size: 64px;
-      margin-bottom: 16px;
-      opacity: 0.5;
     }
     
     @media (max-width: 1024px) {
@@ -394,11 +379,11 @@
         font-size: 32px;
       }
       
-      table {
+      #registrationsTable table {
         font-size: 13px;
       }
       
-      th, td {
+      #registrationsTable th, #registrationsTable td {
         padding: 12px 8px;
       }
     }
@@ -447,113 +432,12 @@
       <div id="result"></div>
     </div>
     
-    <div id="registrationsTable" class="table-container">
-      <div class="table-header">
-        <h2>Registered Users</h2>
-        <span class="badge" id="userCount">0 Users</span>
-      </div>
-      <div id="tableContent"></div>
-    </div>
+    <div id="registrationsTable" class="table-container"></div>
   </div>
 
-  <script>
-    const registrations = [];
-    
-    document.getElementById('registrationForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('psw').value;
-      
-      if (name.length < 3) {
-        showResult('Name must be at least 3 characters long', 'error');
-        return;
-      }
-      
-      if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-        showResult('Please enter a valid email address', 'error');
-        return;
-      }
-      
-      if (password.length < 6) {
-        showResult('Password must be at least 6 characters long', 'error');
-        return;
-      }
-      
-      if (registrations.some(r => r.email === email)) {
-        showResult('This email is already registered', 'error');
-        return;
-      }
-      
-      registrations.push({ name, email });
-      showResult('✓ Registration successful!', 'success');
-      
-      document.getElementById('registrationForm').reset();
-      updateTable();
-    });
-    
-    document.getElementById('viewRegistrations').addEventListener('click', function() {
-      const table = document.getElementById('registrationsTable');
-      table.classList.toggle('show');
-      updateTable();
-    });
-    
-    function showResult(message, type) {
-      const result = document.getElementById('result');
-      result.textContent = message;
-      result.className = `show ${type}`;
-      
-      setTimeout(() => {
-        result.classList.remove('show');
-      }, 4000);
-    }
-    
-    function updateTable() {
-      const tableContent = document.getElementById('tableContent');
-      const userCount = document.getElementById('userCount');
-      
-      userCount.textContent = `${registrations.length} User${registrations.length !== 1 ? 's' : ''}`;
-      
-      if (registrations.length === 0) {
-        tableContent.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-state-icon">📭</div>
-            <p>No registrations yet</p>
-          </div>
-        `;
-        return;
-      }
-      
-      let html = `
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-      
-      registrations.forEach((reg, index) => {
-        html += `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${reg.name}</td>
-            <td>${reg.email}</td>
-          </tr>
-        `;
-      });
-      
-      html += `
-          </tbody>
-        </table>
-      `;
-      
-      tableContent.innerHTML = html;
-    }
-  </script>
+  <!-- Add jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Add your script.js -->
+  <script src="script.js"></script>
 </body>
 </html>
