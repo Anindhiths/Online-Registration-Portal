@@ -7,6 +7,19 @@ module.exports = async (req, res) => {
     res.status(405).json({ error: "Method Not Allowed" });
     return;
   }
+  
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) {
+    return res.status(500).json({ 
+      error: "Environment variables not configured",
+      hasUrl: !!UPSTASH_URL,
+      hasToken: !!UPSTASH_TOKEN
+    });
+  }
+  
+  if (req.method !== "POST") {
+    res.status(405).json({ error: "Method Not Allowed" });
+    return;
+  }
 
   let body = "";
   await new Promise((resolve, reject) => {
